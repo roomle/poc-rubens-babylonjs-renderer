@@ -19,6 +19,13 @@ export class BabylonConfigurationLoader {
     }
 
     private constructMesh(meshConstructionData: MeshConstructionData): BABYLON.TransformNode {
+        const materialData: MaterialData[] = []
+        const materials = meshConstructionData.materialProperties.map(item => {
+            const material = this.createMaterial(item.properties, item.specification.id)
+            material.name = item.specification.id;
+            materialData.push({ materialId: item.specification.id, material: material })
+            return { material: material, properties: item.properties, specification: item.specification }
+        })
         var root = new BABYLON.TransformNode("root");
         const geometries = meshConstructionData.meshData.meshes.map(meshSpecification => {
             const mesh = this.constructGeometry(root, meshSpecification)
@@ -28,43 +35,110 @@ export class BabylonConfigurationLoader {
             const planComponentData = meshConstructionData.planComponents.find((item: any) => item.id == geometryData.specification.runtimeComponentId)
             const globalTransform = this.calculateTransformation(planComponentData, geometryData.specification);
             geometryData.mesh.setPreTransformMatrix(globalTransform);
+            const materialData = materials.find(material => material.specification.id == geometryData.specification.materialId);
+            if (materialData?.material) {
+                geometryData.mesh.material = materialData.material;
+            }
         });  
-        root.scaling = new BABYLON.Vector3(0.001, 0.001, 0.001);  
-        root.rotation.x = -Math.PI/2;
         return root;
     }
 
     private constructGeometry(root: BABYLON.TransformNode, meshSpecification: MeshSpecification): BABYLON.Mesh {
+        var turnedFaces: number[] = [];
+        for (let i=0; i < meshSpecification.indices.length; i+=3) {
+            turnedFaces.push(meshSpecification.indices[i], meshSpecification.indices[i+2], meshSpecification.indices[i+1]);
+        }
         var mesh = new BABYLON.Mesh("custom");
         var vertexData = new BABYLON.VertexData();
         vertexData.positions = meshSpecification.vertices;
         vertexData.normals = meshSpecification.normals;
         vertexData.uvs = meshSpecification.uvCoords;
-        vertexData.indices = meshSpecification.indices;	
-        vertexData.applyToMesh(mesh);
-        mesh.parent = root;
+        vertexData.indices = turnedFaces;	
+        vertexData.applyToMesh(mesh, true);
+        mesh.parent = root;        
         return mesh;
     }
     
     private calculateTransformation(planComponentData: any, meshSpecification: MeshSpecification): BABYLON.Matrix {
-        let globalTransform = new BABYLON.Matrix();
+        let globalTransform = meshSpecification.transform
+            ? convertToBabylonMatrix(meshSpecification.transform)
+            : new BABYLON.Matrix();
         if (planComponentData) {
             const floatBuffer = new Float32Array(planComponentData.planComponent.globalTransform.m);
-            globalTransform = convertToBabylonMatrix(floatBuffer);
+            const componentTransform = convertToBabylonMatrix(floatBuffer);
+            globalTransform = globalTransform.multiply(componentTransform);
         }
-        if (meshSpecification.transform) {
-            const transform = convertToBabylonMatrix(meshSpecification.transform);
-            globalTransform = transform.multiply(globalTransform);
-        }
+        const scale = 1 / 1000;
+        const c = Math.cos(-Math.PI / 2);
+        const s = Math.sin(-Math.PI / 2);
+        const roomleToBabylonTransform = BABYLON.Matrix.FromArray([
+            -scale, 0, 0, 0,
+            0, scale * c, scale * s, 0,
+            0, -scale * s, scale * c, 0,
+            0, 0, 0, 1,
+        ]);
+        globalTransform = globalTransform.multiply(roomleToBabylonTransform);
         return globalTransform;
     }
+
+    public createMaterial(properties: MaterialProperties, id: string): BABYLON.Material {
+        const material = new BABYLON.StandardMaterial("material-" + id);
+        //material.backFaceCulling = false;
+        //material.cullBackFaces = false;
+        
+        const baseColor = new BABYLON.Color3(...properties.baseColor);
+        if (properties.diffuseMap) {
+            //const setDiffuseTexture = (texture: Texture) => {
+            //    this.setTextureProperties(texture, properties.diffuseMap)
+            //    material.map = texture
+            //}
+            //this.loadAndSetTexture(setDiffuseTexture, properties.diffuseMap.url, baseColor);
+            //material.transparent = properties.diffuseMapHasAlpha;
+        } else {
+            material.diffuseColor = baseColor;
+            //material.opacity = properties.alpha;
+            //material.transparent = material.opacity < 1;
+        }
+        if (properties.normalMap) {
+            //const setNormalTexture = (texture: Texture) => {
+            //    this.setTextureProperties(texture, properties.normalMap)
+            //    material.normalMap = texture
+            //    material.normalMapType = TangentSpaceNormalMap
+            //}
+            //this.loadAndSetTexture(setNormalTexture, properties.normalMap.url)
+        }
+        if (properties.ormMap) {
+            //const setORMTexture = (texture: Texture) => {
+            //    this.setTextureProperties(texture, properties.ormMap)
+            //    material.aoMap = texture
+            //    material.roughnessMap = texture
+            //    material.metalnessMap = texture
+            //    material.aoMapIntensity = 1
+            //    material.roughness = 1
+            //    material.metalness = 1
+            //}
+            //this.loadAndSetTexture(setORMTexture, properties.ormMap.url)
+        } else {
+            //material.metalness = properties.metallic
+            //material.reflectivity = properties.reflectivity
+            //material.roughness = properties.roughness
+        }
+        //material.transmission = properties.transmission
+        //material.ior = 1 + properties.transmissionIOR
+        //loadAndSetEnvironmentTexture((cubeTexture: CubeTexture) => { material.envMap = cubeTexture })
+        //material.envMapIntensity = 2
+        return material;
+    }
 }
-BABYLON.Matrix
+
 export const convertToBabylonMatrix = (transform: Float32Array): BABYLON.Matrix => {
     const transformArray: number[] = convertCObject(transform);
     let transformMatrix = BABYLON.Matrix.FromArray(transformArray);
     transformMatrix = transformMatrix.transpose();
-
-    //return convertKernelMatrixCoordsToThree(transformMatrix);
     return transformMatrix;
 };
+
+export interface MaterialData {
+    materialId: string,
+    material: BABYLON.Material,
+}

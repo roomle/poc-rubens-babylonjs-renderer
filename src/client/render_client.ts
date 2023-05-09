@@ -15,8 +15,8 @@ camera.attachControl(canvas, true);
 
 scene.clearColor = new BABYLON.Color4(0.2, 0.2, 0.3, 1.0);
 
-const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-light.intensity = 0.7;
+const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(-1, 2, 1), scene);
+light.intensity = 1.0;
 const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
 sphere.position.y = 1;
 const ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
