@@ -88,16 +88,16 @@ export class BabylonConfigurationLoader {
         
         const baseColor = new BABYLON.Color3(...properties.baseColor);
         if (properties.diffuseMap) {
-            //const setDiffuseTexture = (texture: Texture) => {
-            //    this.setTextureProperties(texture, properties.diffuseMap)
-            //    material.map = texture
-            //}
-            //this.loadAndSetTexture(setDiffuseTexture, properties.diffuseMap.url, baseColor);
-            //material.transparent = properties.diffuseMapHasAlpha;
+            material.diffuseTexture = new BABYLON.Texture(properties.diffuseMap.url);
+            material.diffuseTexture.hasAlpha = properties.diffuseMapHasAlpha;
+            this.setTextureProperties(material.diffuseTexture as BABYLON.Texture, properties.diffuseMap);
         } else {
             material.diffuseColor = baseColor;
-            //material.opacity = properties.alpha;
-            //material.transparent = material.opacity < 1;
+            if (properties.alpha < 1) {
+                material.transparencyMode = 2; // ALPHABLEND
+                material.alphaMode = 4; // ALPHA_MULTIPLY
+                material.alpha = properties.alpha;
+            }
         }
         if (properties.normalMap) {
             //const setNormalTexture = (texture: Texture) => {
@@ -118,16 +118,27 @@ export class BabylonConfigurationLoader {
             //    material.metalness = 1
             //}
             //this.loadAndSetTexture(setORMTexture, properties.ormMap.url)
+            material.roughness = 1;
         } else {
             //material.metalness = properties.metallic
             //material.reflectivity = properties.reflectivity
-            //material.roughness = properties.roughness
+            material.roughness = properties.roughness;
+            //material.specularPower = 0;
         }
         //material.transmission = properties.transmission
         //material.ior = 1 + properties.transmissionIOR
         //loadAndSetEnvironmentTexture((cubeTexture: CubeTexture) => { material.envMap = cubeTexture })
         //material.envMapIntensity = 2
         return material;
+    }
+
+    private setTextureProperties(texture: BABYLON.Texture, textureProperties?: TextureProperties): void {
+        if (textureProperties) {
+            let textureWidth = textureProperties.mmWidth === 0 ? 1000 : textureProperties.mmWidth;
+            let textureHeight = textureProperties.mmHeight === 0 ? 1000 : textureProperties.mmHeight;
+            texture.uScale = 1 / textureWidth;
+            texture.vScale = 1 / textureHeight;
+        }
     }
 }
 
