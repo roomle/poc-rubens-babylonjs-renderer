@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/client/webgl_client.ts',
+    entry: './src/client/render_client.ts',
     module: {
         rules: [
             {
