@@ -1,5 +1,7 @@
 # PoC Rubens Babylon.js renderer
 
+[Demo](https://roomle.github.io/poc-rubens-babylonjs-renderer/dist/client/)
+
 ## Resources
 
 - [babylon.js](https://www.babylonjs.com/)
