@@ -7,18 +7,27 @@ import {
     TextureProperties
 } from '../loader/meshConstructor';
 import { convertCObject } from '../loader/configuratorUtils';
-import * as BABYLON from 'babylonjs'
+import {
+    Color3,
+    Material,
+    Matrix,
+    Mesh,
+    StandardMaterial,
+    Texture,
+    TransformNode,
+    VertexData,
+} from 'babylonjs'
 
 export class BabylonConfigurationLoader {
 
-    public async loadAsync(configurationId: string): Promise<BABYLON.TransformNode> {
+    public async loadAsync(configurationId: string): Promise<TransformNode> {
         const configuratorMesh: MeshConstructor = await MeshConstructor.newMeshConstructor();
         const meshConstructionData = await configuratorMesh.constructMesh(configurationId);
         console.log(meshConstructionData);
         return this.constructMesh(meshConstructionData);
     }
 
-    private constructMesh(meshConstructionData: MeshConstructionData): BABYLON.TransformNode {
+    private constructMesh(meshConstructionData: MeshConstructionData): TransformNode {
         const materialData: MaterialData[] = []
         const materials = meshConstructionData.materialProperties.map(item => {
             const material = this.createMaterial(item.properties, item.specification.id)
@@ -26,7 +35,7 @@ export class BabylonConfigurationLoader {
             materialData.push({ materialId: item.specification.id, material: material })
             return { material: material, properties: item.properties, specification: item.specification }
         })
-        var root = new BABYLON.TransformNode("root");
+        var root = new TransformNode("root");
         const geometries = meshConstructionData.meshData.meshes.map(meshSpecification => {
             const mesh = this.constructGeometry(root, meshSpecification)
             return { 'mesh': mesh, 'specification': meshSpecification }
@@ -43,13 +52,13 @@ export class BabylonConfigurationLoader {
         return root;
     }
 
-    private constructGeometry(root: BABYLON.TransformNode, meshSpecification: MeshSpecification): BABYLON.Mesh {
+    private constructGeometry(root: TransformNode, meshSpecification: MeshSpecification): Mesh {
         var turnedFaces: number[] = [];
         for (let i=0; i < meshSpecification.indices.length; i+=3) {
             turnedFaces.push(meshSpecification.indices[i], meshSpecification.indices[i+2], meshSpecification.indices[i+1]);
         }
-        var mesh = new BABYLON.Mesh("custom");
-        var vertexData = new BABYLON.VertexData();
+        var mesh = new Mesh("custom");
+        var vertexData = new VertexData();
         vertexData.positions = meshSpecification.vertices;
         vertexData.normals = meshSpecification.normals;
         vertexData.uvs = meshSpecification.uvCoords;
@@ -59,10 +68,10 @@ export class BabylonConfigurationLoader {
         return mesh;
     }
     
-    private calculateTransformation(planComponentData: any, meshSpecification: MeshSpecification): BABYLON.Matrix {
+    private calculateTransformation(planComponentData: any, meshSpecification: MeshSpecification): Matrix {
         let globalTransform = meshSpecification.transform
             ? convertToBabylonMatrix(meshSpecification.transform)
-            : new BABYLON.Matrix();
+            : new Matrix();
         if (planComponentData) {
             const floatBuffer = new Float32Array(planComponentData.planComponent.globalTransform.m);
             const componentTransform = convertToBabylonMatrix(floatBuffer);
@@ -71,7 +80,7 @@ export class BabylonConfigurationLoader {
         const scale = 1 / 1000;
         const c = Math.cos(-Math.PI / 2);
         const s = Math.sin(-Math.PI / 2);
-        const roomleToBabylonTransform = BABYLON.Matrix.FromArray([
+        const roomleToBabylonTransform = Matrix.FromArray([
             -scale, 0, 0, 0,
             0, scale * c, scale * s, 0,
             0, -scale * s, scale * c, 0,
@@ -81,16 +90,16 @@ export class BabylonConfigurationLoader {
         return globalTransform;
     }
 
-    public createMaterial(properties: MaterialProperties, id: string): BABYLON.Material {
-        const material = new BABYLON.StandardMaterial("material-" + id);
+    public createMaterial(properties: MaterialProperties, id: string): Material {
+        const material = new StandardMaterial("material-" + id);
         //material.backFaceCulling = false;
         //material.cullBackFaces = false;
         
-        const baseColor = new BABYLON.Color3(...properties.baseColor);
+        const baseColor = new Color3(...properties.baseColor);
         if (properties.diffuseMap) {
-            material.diffuseTexture = new BABYLON.Texture(properties.diffuseMap.url);
+            material.diffuseTexture = new Texture(properties.diffuseMap.url);
             material.diffuseTexture.hasAlpha = properties.diffuseMapHasAlpha;
-            this.setTextureProperties(material.diffuseTexture as BABYLON.Texture, properties.diffuseMap);
+            this.setTextureProperties(material.diffuseTexture as Texture, properties.diffuseMap);
         } else {
             material.diffuseColor = baseColor;
             if (properties.alpha < 1) {
@@ -132,7 +141,7 @@ export class BabylonConfigurationLoader {
         return material;
     }
 
-    private setTextureProperties(texture: BABYLON.Texture, textureProperties?: TextureProperties): void {
+    private setTextureProperties(texture: Texture, textureProperties?: TextureProperties): void {
         if (textureProperties) {
             let textureWidth = textureProperties.mmWidth === 0 ? 1000 : textureProperties.mmWidth;
             let textureHeight = textureProperties.mmHeight === 0 ? 1000 : textureProperties.mmHeight;
@@ -142,14 +151,14 @@ export class BabylonConfigurationLoader {
     }
 }
 
-export const convertToBabylonMatrix = (transform: Float32Array): BABYLON.Matrix => {
+export const convertToBabylonMatrix = (transform: Float32Array): Matrix => {
     const transformArray: number[] = convertCObject(transform);
-    let transformMatrix = BABYLON.Matrix.FromArray(transformArray);
+    let transformMatrix = Matrix.FromArray(transformArray);
     transformMatrix = transformMatrix.transpose();
     return transformMatrix;
 };
 
 export interface MaterialData {
     materialId: string,
-    material: BABYLON.Material,
+    material: Material,
 }

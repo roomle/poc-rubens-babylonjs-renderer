@@ -1,25 +1,35 @@
 import { BabylonConfigurationLoader} from './renderer/configurationLoader';
-import * as BABYLON from 'babylonjs'
+import {
+    ArcRotateCamera,
+    Color4,
+    Engine,
+    FreeCamera,
+    HemisphericLight,
+    MeshBuilder,
+    Scene,
+    UniversalCamera,
+    Vector3,
+} from 'babylonjs'
 
 const canvas = document.getElementById('babylonjs_canvas') as HTMLCanvasElement;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const engine = new BABYLON.Engine(canvas, true);
+const engine = new Engine(canvas, true);
 
-const scene = new BABYLON.Scene(engine);
-//const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
-//const camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 5, -10), scene);
-const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI/3, 8, new BABYLON.Vector3(0, 0, 0), scene);
-camera.setTarget(BABYLON.Vector3.Zero());
+const scene = new Scene(engine);
+//const camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
+//const camera = new UniversalCamera("UniversalCamera", new Vector3(0, 5, -10), scene);
+const camera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI/3, 8, new Vector3(0, 0, 0), scene);
+camera.setTarget(Vector3.Zero());
 camera.attachControl(canvas, true);
 
-scene.clearColor = new BABYLON.Color4(1, 1, 1, 1.0);
+scene.clearColor = new Color4(1, 1, 1, 1.0);
 
-const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(-1, 2, 1), scene);
+const light = new HemisphericLight("light", new Vector3(-1, 2, 1), scene);
 light.intensity = 1.0;
-const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
+const sphere = MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
 sphere.position.y = 1;
-//const ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 5, height: 5}, scene);
+//const ground = MeshBuilder.CreateGround("ground", {width: 5, height: 5}, scene);
 
 //let id: string = '';
 //id = 'roomle_script_test:uv_transfom_external_mesh:7BA3885FD5EAFB3187F5CFBD8EC55762D461B3EF2906B9209E9C290BB898A608';
