@@ -31,13 +31,13 @@ const sphere = MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, s
 sphere.position.y = 1;
 //const ground = MeshBuilder.CreateGround("ground", {width: 5, height: 5}, scene);
 
-//let id: string = '';
-//id = 'roomle_script_test:uv_transfom_external_mesh:7BA3885FD5EAFB3187F5CFBD8EC55762D461B3EF2906B9209E9C290BB898A608';
-//id = 'roomle_script_test:rubiks_cube:84872783D647B1780D479B953E9CE01E4C38332FF6B23C120C6ABDD5C8C588FD'
+//const id = 'roomle_script_test:uv_transfom_external_mesh:7BA3885FD5EAFB3187F5CFBD8EC55762D461B3EF2906B9209E9C290BB898A608';
+//const id = 'roomle_script_test:rubiks_cube:84872783D647B1780D479B953E9CE01E4C38332FF6B23C120C6ABDD5C8C588FD'
 const id1 = 'usm:frame:80490DB7C5DD43CFF0CEA63649861F9C57394E874E2499DA7996918215A4A54E';
-//const id2 = 'revised:Eartham:6107617DE6E2FE8DDD27115B1CBC7D8741CEAEC52B7B00E27231B00882F8E396';
-//const id2 = 'musterring:Vittoria_Right:A736BA3E8E4908A64B2480D34C818133BB21AE74810431EC7025EE62E9ACF7A0';
 const id2 = 'brands_3:Eames_Plastic_Chairs:E7645ABD321BBD9CC09CF565D22EB7463FE1EAB3431EEC4CCE1E3A4FF1F525D4';
+//const id3 = 'revised:Eartham:6107617DE6E2FE8DDD27115B1CBC7D8741CEAEC52B7B00E27231B00882F8E396';
+//const id3 = 'musterring:Vittoria_Right:A736BA3E8E4908A64B2480D34C818133BB21AE74810431EC7025EE62E9ACF7A0';
+//const id3 = 'dreikant:202';
 
 const configurationLoader = new BabylonConfigurationLoader();
 configurationLoader.loadAsync(id1).then((root) => {
@@ -50,6 +50,14 @@ configurationLoader.loadAsync(id2).then((root) => {
     root.position.z = 0.5;
     root.rotation.y = Math.PI / 4;
 });
+/*
+configurationLoader.loadAsync(id3).then((root) => {
+    sphere.isVisible = false;
+    root.position.x = 2;
+    root.position.z = 0.5;
+    root.rotation.y = -Math.PI / 2;
+});
+*/
 
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;

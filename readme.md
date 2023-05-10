@@ -14,4 +14,5 @@
 - [How to apply a 4x4 transformation matrix to a Mesh / AbstractMesh](https://forum.babylonjs.com/t/how-to-apply-a-4x4-transformation-matrix-to-a-mesh-abstractmesh/24693)
 - [Introduction To Materials](https://doc.babylonjs.com/features/featuresDeepDive/materials/using/materials_introduction)
 - [More on Textures](https://babylonjsguide.github.io/intermediate/Materials)
-
+- [Introduction To Lights](https://doc.babylonjs.com/features/featuresDeepDive/lights/lights_introduction)
+- [Mastering PBR Materials](https://doc.babylonjs.com/features/featuresDeepDive/materials/using/masterPBR)

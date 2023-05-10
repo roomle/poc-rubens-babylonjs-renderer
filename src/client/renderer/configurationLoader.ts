@@ -12,6 +12,7 @@ import {
     Material,
     Matrix,
     Mesh,
+    PBRMaterial,
     StandardMaterial,
     Texture,
     TransformNode,
@@ -91,17 +92,17 @@ export class BabylonConfigurationLoader {
     }
 
     public createMaterial(properties: MaterialProperties, id: string): Material {
-        const material = new StandardMaterial("material-" + id);
+        const material = new PBRMaterial("material-" + id);
         //material.backFaceCulling = false;
         //material.cullBackFaces = false;
         
         const baseColor = new Color3(...properties.baseColor);
         if (properties.diffuseMap) {
-            material.diffuseTexture = new Texture(properties.diffuseMap.url);
-            material.diffuseTexture.hasAlpha = properties.diffuseMapHasAlpha;
-            this.setTextureProperties(material.diffuseTexture as Texture, properties.diffuseMap);
+            material.albedoTexture = new Texture(properties.diffuseMap.url);
+            material.albedoTexture.hasAlpha = properties.diffuseMapHasAlpha;
+            this.setTextureProperties(material.albedoTexture as Texture, properties.diffuseMap);
         } else {
-            material.diffuseColor = baseColor;
+            material.albedoColor = baseColor;
             if (properties.alpha < 1) {
                 material.transparencyMode = 2; // ALPHABLEND
                 material.alphaMode = 4; // ALPHA_MULTIPLY
@@ -109,31 +110,24 @@ export class BabylonConfigurationLoader {
             }
         }
         if (properties.normalMap) {
-            //const setNormalTexture = (texture: Texture) => {
-            //    this.setTextureProperties(texture, properties.normalMap)
-            //    material.normalMap = texture
-            //    material.normalMapType = TangentSpaceNormalMap
-            //}
-            //this.loadAndSetTexture(setNormalTexture, properties.normalMap.url)
+            material.bumpTexture = new Texture(properties.normalMap.url);
+            this.setTextureProperties(material.bumpTexture as Texture, properties.normalMap);
         }
         if (properties.ormMap) {
-            //const setORMTexture = (texture: Texture) => {
-            //    this.setTextureProperties(texture, properties.ormMap)
-            //    material.aoMap = texture
-            //    material.roughnessMap = texture
-            //    material.metalnessMap = texture
-            //    material.aoMapIntensity = 1
-            //    material.roughness = 1
-            //    material.metalness = 1
-            //}
-            //this.loadAndSetTexture(setORMTexture, properties.ormMap.url)
+            material.useAmbientOcclusionFromMetallicTextureRed = true;
+            material.useRoughnessFromMetallicTextureAlpha = false;
+            material.useRoughnessFromMetallicTextureGreen = true;
+            material.useMetallnessFromMetallicTextureBlue = true;
+            material.metallicTexture = new Texture(properties.ormMap.url);
+            this.setTextureProperties(material.metallicTexture as Texture, properties.ormMap);
+            material.metallic = 1;
             material.roughness = 1;
         } else {
-            //material.metalness = properties.metallic
-            //material.reflectivity = properties.reflectivity
+            material.metallic = properties.metallic;
             material.roughness = properties.roughness;
-            //material.specularPower = 0;
         }
+        material.subSurface.isTranslucencyEnabled = properties.transmission > 0.001;
+        material.subSurface.translucencyIntensity = properties.transmission;
         //material.transmission = properties.transmission
         //material.ior = 1 + properties.transmissionIOR
         //loadAndSetEnvironmentTexture((cubeTexture: CubeTexture) => { material.envMap = cubeTexture })
