@@ -17,3 +17,6 @@
 - [Introduction To Lights](https://doc.babylonjs.com/features/featuresDeepDive/lights/lights_introduction)
 - [Mastering PBR Materials](https://doc.babylonjs.com/features/featuresDeepDive/materials/using/masterPBR)
 - [Using An HDR Environment For PBR](https://doc.babylonjs.com/features/featuresDeepDive/materials/using/HDREnvironment)
+- [Shadows](https://doc.babylonjs.com/features/featuresDeepDive/lights/shadows)
+- [Using the SSAO Rendering Pipeline](https://doc.babylonjs.com/features/featuresDeepDive/postProcesses/SSAORenderPipeline)
+
