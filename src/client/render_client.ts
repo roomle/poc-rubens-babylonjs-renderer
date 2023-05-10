@@ -1,6 +1,7 @@
 import { BabylonConfigurationLoader} from './renderer/configurationLoader';
 import {
     ArcRotateCamera,
+    Color3,
     Color4,
     Engine,
     FreeCamera,
@@ -24,6 +25,10 @@ camera.setTarget(Vector3.Zero());
 camera.attachControl(canvas, true);
 
 scene.clearColor = new Color4(1, 1, 1, 1.0);
+scene.createDefaultEnvironment({
+    skyboxColor: new Color3(1, 1, 1),
+    groundColor: new Color3(1, 1, 1),
+});
 
 const light = new HemisphericLight("light", new Vector3(-1, 2, 1), scene);
 light.intensity = 1.0;

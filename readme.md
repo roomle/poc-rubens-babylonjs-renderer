@@ -16,3 +16,4 @@
 - [More on Textures](https://babylonjsguide.github.io/intermediate/Materials)
 - [Introduction To Lights](https://doc.babylonjs.com/features/featuresDeepDive/lights/lights_introduction)
 - [Mastering PBR Materials](https://doc.babylonjs.com/features/featuresDeepDive/materials/using/masterPBR)
+- [Using An HDR Environment For PBR](https://doc.babylonjs.com/features/featuresDeepDive/materials/using/HDREnvironment)
