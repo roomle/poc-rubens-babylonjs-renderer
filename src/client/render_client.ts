@@ -3,11 +3,13 @@ import {
     ArcRotateCamera,
     Color3,
     Color4,
+    DefaultRenderingPipeline,
     Engine,
     FreeCamera,
     HemisphericLight,
     MeshBuilder,
     Scene,
+    SSAORenderingPipeline,
     UniversalCamera,
     Vector3,
 } from 'babylonjs'
@@ -15,7 +17,9 @@ import {
 const canvas = document.getElementById('babylonjs_canvas') as HTMLCanvasElement;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const engine = new Engine(canvas, true);
+const engine = new Engine(canvas, true, {
+    antialias: true,
+});
 
 const scene = new Scene(engine);
 //const camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
@@ -24,11 +28,21 @@ const camera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI/3, 8, new Vect
 camera.setTarget(Vector3.Zero());
 camera.attachControl(canvas, true);
 
+var pipeline = new DefaultRenderingPipeline(
+    "defaultPipeline", // The name of the pipeline
+    true, // Do you want the pipeline to use HDR texture?
+    scene, // The scene instance
+    [camera] // The list of cameras to be attached to
+);
+pipeline.samples = 4;
+pipeline.fxaaEnabled = true;
+
 scene.clearColor = new Color4(1, 1, 1, 1.0);
 scene.createDefaultEnvironment({
     skyboxColor: new Color3(1, 1, 1),
     groundColor: new Color3(1, 1, 1),
 });
+//const ssao = new SSAORenderingPipeline("ssaopipeline", scene, 0.75, [camera]);
 
 const light = new HemisphericLight("light", new Vector3(-1, 2, 1), scene);
 light.intensity = 1.0;

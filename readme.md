@@ -19,4 +19,5 @@
 - [Using An HDR Environment For PBR](https://doc.babylonjs.com/features/featuresDeepDive/materials/using/HDREnvironment)
 - [Shadows](https://doc.babylonjs.com/features/featuresDeepDive/lights/shadows)
 - [Using the SSAO Rendering Pipeline](https://doc.babylonjs.com/features/featuresDeepDive/postProcesses/SSAORenderPipeline)
-
+- [Screen Space Reflections (SSR) Post Process](https://doc.babylonjs.com/features/featuresDeepDive/postProcesses/screenSpaceReflectionsPostProcess)
+- [Creating the rendering pipeline](https://doc.babylonjs.com/features/featuresDeepDive/postProcesses/defaultRenderingPipeline)
