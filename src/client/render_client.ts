@@ -37,10 +37,13 @@ var pipeline = new DefaultRenderingPipeline(
 pipeline.samples = 4;
 pipeline.fxaaEnabled = true;
 
-scene.clearColor = new Color4(1, 1, 1, 1.0);
+scene.clearColor = new Color4(1, 1, 1, 1);
 scene.createDefaultEnvironment({
     skyboxColor: new Color3(1, 1, 1),
     groundColor: new Color3(1, 1, 1),
+    //createGround: true,
+    //groundOpacity: 0.5,
+    //createSkybox: false,
 });
 //const ssao = new SSAORenderingPipeline("ssaopipeline", scene, 0.75, [camera]);
 
