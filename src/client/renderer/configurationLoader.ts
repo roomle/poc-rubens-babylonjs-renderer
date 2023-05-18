@@ -1,12 +1,11 @@
 import { 
     MeshConstructionData,
-    MeshData, 
     MaterialProperties,
     MeshConstructor,
     MeshSpecification,
     TextureProperties
 } from '../loader/meshConstructor';
-import { convertCObject } from '../loader/configuratorUtils';
+import { convertCObject } from 'roomle-core-hsc/src/embind/configuratorUtils';
 import {
     Color3,
     Material,

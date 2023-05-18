@@ -7,7 +7,8 @@ import {
     EmscriptenString, 
     EmscriptenMap,
     Component
-} from './wasm/configuratorCoreInterface'
+} from 'roomle-core-hsc/src/embind/configuratorCoreInterface'
+import { ConfigurationRequestsInterface } from 'roomle-core-hsc/src/embind/configuratorCallback'
 import {
     loadConfiguration, 
     loadComponent, 
@@ -36,7 +37,7 @@ interface ExternalMeshRequest {
     quality: number
 }
 
-export class ConfigurationRequests {
+export class ConfigurationRequests implements ConfigurationRequestsInterface {
     
     private static conversationId: number = 0
     private _configuratorModule: ConfiguratorContainer

@@ -1,8 +1,8 @@
 import {
     IoContext, 
     ConfiguratorCore
-} from './configuratorCore'
-import {ConfiguratorCallbackHandler} from './configuratorCallback'
+} from 'roomle-core-hsc/src/embind/configuratorCore'
+import {ConfiguratorCallbackHandler} from 'roomle-core-hsc/src/embind/configuratorCallback'
 import {ConfigurationRequests} from './configurationRequests'
 import {
     ConfigurationConstructor,

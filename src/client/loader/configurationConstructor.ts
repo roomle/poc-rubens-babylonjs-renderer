@@ -2,7 +2,8 @@ import {
     ConfiguratorCoreInterface, 
     ConfiguratorContainer, 
     Vector3f
-} from './wasm/configuratorCoreInterface'
+} from 'roomle-core-hsc/src/embind/configuratorCoreInterface'
+import { ConfigurationConstructorInterface } from 'roomle-core-hsc/src/embind/configuratorCallback'
 import { loadMaterials } from './rapiAccess'
 
 export interface MeshData {
@@ -25,7 +26,7 @@ export interface MeshSpecification {
     uvTransform?: Float32Array
 }
 
-export class ConfigurationConstructor {
+export class ConfigurationConstructor implements ConfigurationConstructorInterface {
 
     private _configuratorModule: ConfiguratorContainer
     private _configurator: ConfiguratorCoreInterface
