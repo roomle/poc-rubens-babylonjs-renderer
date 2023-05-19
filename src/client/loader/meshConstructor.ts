@@ -3,14 +3,13 @@ import {
     ConfiguratorCore
 } from 'roomle-core-hsc/src/embind/configuratorCore'
 import {ConfiguratorCallbackHandler} from 'roomle-core-hsc/src/embind/configuratorCallback'
-import {ConfigurationRequests} from './configurationRequests'
+import {ConfigurationRequests} from 'roomle-core-hsc/src/loader/configurationRequests'
 import {
     ConfigurationConstructor,
     MeshData,
-    MeshSpecification
-} from './configurationConstructor'
+} from 'roomle-core-hsc/src/loader/configurationConstructor'
 
-export { MeshData, MeshSpecification } from './configurationConstructor';
+export { MeshSpecification } from 'roomle-core-hsc/src/loader/configurationConstructor'
 
 const ioContext: IoContext = {
     log: (message : string) => { console.log(`LOG: ${message}`) },
