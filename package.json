@@ -21,7 +21,7 @@
     "@types/node": "^20.2.1",
     "copyfiles": "^2.4.1",
     "install-peers": "^1.0.4",
-    "roomle-core-hsc": "https://www.roomle.com/t/external/core/snap/315/hsc.tar.gz",
+    "roomle-core-hsc": "https://www.roomle.com/t/external/core/snap/316/hsc.tar.gz",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.4",
     "webpack": "^5.83.1",

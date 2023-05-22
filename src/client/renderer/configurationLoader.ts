@@ -4,7 +4,7 @@ import {
     MeshConstructor,
     MeshSpecification,
     TextureProperties
-} from '../loader/meshConstructor';
+} from 'roomle-core-hsc/src/loader/configurationLoader';
 import { convertCObject } from 'roomle-core-hsc/src/embind/configuratorUtils';
 import {
     Color3,
